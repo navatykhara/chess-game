@@ -28,6 +28,7 @@ class PawnPiece(ChessPiece):
                     if(toPrint):
                         pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * pos_x + 50, 87.5* (pos_y-i) + 50,88,88))
                     potMove.append((pos_y-i, pos_x))
+                break
         if(not(pos_y - 1 < 0) and not (pos_x - 1 < 0)):
             if(colourMatrix[pos_y - 1][pos_x - 1] != currentCol and colourMatrix[pos_y - 1][pos_x - 1] != 0):
                 if(toPrint):
@@ -39,6 +40,7 @@ class PawnPiece(ChessPiece):
                     pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x+1) + 50, 87.5* (pos_y-1) + 50,88,88))
                 potMove.append((pos_y-1,pos_x+1))
         potMove.append((pos_y, pos_x))
+##        print(potMove)
         return potMove
 class bPawnPiece(PawnPiece):
     def __init__(self,pos_x = 0,pos_y = 0):
@@ -316,6 +318,7 @@ class QueenPiece(ChessPiece):
                     if(colourMatrix[pos_y][pos_x + i] != currentCol and colourMatrix[pos_y][pos_x + i] != 0):
                         bstate[3] = 1
         potMove.append((pos_y,pos_x))
+##        print("POT",potMove)
         return potMove
 
 
@@ -331,32 +334,32 @@ class KingPiece(ChessPiece):
         currentCol = colourMatrix[pos_y][pos_x]
         for i in range(0,3):
             if((not pos_x-1 + i > 7) and (not pos_y - 1 < 0) and (not pos_x-1 + i < 0)):
-                if(colourMatrix[pos_y-1][pos_x-1 + i] != currentCol and not loopCheck((pos_y - 1, pos_x -1 + i), colourMatrix, currentCol, influence)):
+                if(colourMatrix[pos_y-1][pos_x-1 + i] != currentCol and not loopCheck((pos_y - 1, pos_x -1 + i), colourMatrix, currentCol, influence) and board[pos_y-1][pos_x-1+i] != currentCol):
                     if(toPrint):
                         pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x-1 + i) + 50, 87.5* (pos_y-1) + 50,88,88))
-                    print((pos_y-1,pos_x-1+i),"0")
+##                    print((pos_y-1,pos_x-1+i),"0")
                     potMove.append((pos_y-1,pos_x-1+i))
             if((not pos_x-1 + i > 7) and (not pos_y + 1 > 7) and (not pos_x-1 + i < 0)):
-                print((pos_y + 1, pos_x -1 + i),loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence), "SS")
-                if(colourMatrix[pos_y+1][pos_x-1 + i] != currentCol and not loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence)):
+##                print((pos_y + 1, pos_x -1 + i),loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence), "SS")
+                if(colourMatrix[pos_y+1][pos_x-1 + i] != currentCol and not loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence) and board[pos_y+1][pos_x-1+i] != currentCol):
                     if(toPrint):
                         pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x-1 + i) + 50, 87.5* (pos_y+1) + 50,88,88))
-                    print((pos_y+1,pos_x-1+i),"1")
+##                    print((pos_y+1,pos_x-1+i),"1")
                     potMove.append((pos_y+1,pos_x-1+i))
         if((not pos_x-1 < 0) and (not pos_y < 0) and (not pos_y > 7 )):
-            if(colourMatrix[pos_y][pos_x-1] != currentCol and not loopCheck((pos_y, pos_x -1), colourMatrix, currentCol,  influence)):
+            if(colourMatrix[pos_y][pos_x-1] != currentCol and not loopCheck((pos_y, pos_x -1), colourMatrix, currentCol,  influence) and board[pos_y][pos_x-1] != currentCol):
                 if(toPrint):
                     pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x-1) + 50, 87.5* (pos_y) + 50,88,88))
-                print((pos_y,pos_x-1),"2")
+##                print((pos_y,pos_x-1),"2")
                 potMove.append((pos_y,pos_x-1))
         if((not pos_x+1 > 7) and (not pos_y < 0) and (not pos_y > 7)):
-            if(colourMatrix[pos_y][pos_x+1] != currentCol and not loopCheck((pos_y, pos_x + 1), colourMatrix,  currentCol, influence)):
+            if(colourMatrix[pos_y][pos_x+1] != currentCol and (not loopCheck((pos_y, pos_x + 1), colourMatrix,  currentCol, influence) and board[pos_y][pos_x+1] != currentCol)):
                 if(toPrint):
                     pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x+1) + 50, 87.5* (pos_y) + 50,88,88))
-                print((pos_y,pos_x+1),"3")
+##                print((pos_y,pos_x+1),"3")
                 potMove.append((pos_y,pos_x+1))
         potMove.append((pos_y,pos_x))
-        print(potMove)
+##        print(potMove)
         return potMove
 def loadBoard(board,screen, colourMatrix):
     for i in range(len(board)):
@@ -374,15 +377,17 @@ def checkKingCheck(colour, screen, colourMatrix, board, pawnMatrix):
     influence = []
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if(colourMatrix[i][j] != colour and board[i][j] != KingPiece and board[i][j] != 0):
+            if(colourMatrix[i][j] != colour and board[i][j] != KingPiece  and board[i][j] != 0):
                 if(board[i][j] == PawnPiece or board[i][j] == bPawnPiece):
-                    influence.append(board[i][j].validMove(screen,j,i, board, colourMatrix, pawnMatrix, False))
+                    influence.append(board[i][j].validMove(screen,j,i, pawnMatrix[i][j], board, colourMatrix, False))
                 else:
                     influence.append(board[i][j].validMove(screen,j,i, board, colourMatrix, False))
     return influence
-def loopCheck(tup, colourMatrix, colour, influence):    
+def loopCheck(tup, colourMatrix, colour, influence):
+##    print(influence, "SSS")
     for i in range(len(influence)):
         for j in range(len(influence[i])):
+##            print(influence[i][j], tup)
             if(influence[i][j] == tup):
                 return True
     return False
@@ -435,15 +440,16 @@ def main():
         loadBoard(board,screen, colourMatrix)
         pygame.draw.rect(screen,(255,255,255), (50,50,700,700),1)
         influence = checkKingCheck(colourCounter, screen, colourMatrix, board, pawnMatrix)
-##        print(colourCounter, influence)
         if(colourCounter == "b"):
-            if(loopCheck(bKingPos, colourMatrix, colourCounter,checkKingCheck("w", screen, colourMatrix, board, pawnMatrix))):
+            print(checkKingCheck("b", screen, colourMatrix, board, pawnMatrix), "start")
+            print(bKingPos[1],bKingPos[0])
+            if(loopCheck((bKingPos[1],bKingPos[0]), colourMatrix, colourCounter,checkKingCheck("b", screen, colourMatrix, board, pawnMatrix))):
                 binCheck = True
                 print("Black in Check")
             else:
                 binCheck = False
         elif(colourCounter == "w"):
-            if(loopCheck(wKingPos, colourMatrix,  colourCounter, checkKingCheck("b", screen, colourMatrix, board, pawnMatrix))):
+            if(loopCheck((wKingPos[0],wKingPos[1]), colourMatrix,  colourCounter, checkKingCheck("w", screen, colourMatrix, board, pawnMatrix))):
                 winCheck = True
                 print("White in Check")
             else:
@@ -466,9 +472,9 @@ def main():
                 currentPiece.create(screen,pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1])
         pygame.display.update()
         if(colourCounter == "w"):
-            kPotMove = KingPiece.validMove(screen,wKingPos[1],wKingPos[0],board, colourMatrix, influence,colourCounter, False)
+            kPotMove = KingPiece.validMove(screen,wKingPos[0],wKingPos[1],board, colourMatrix, influence,colourCounter, False)
         else:
-            kPotMove = KingPiece.validMove(screen,bKingPos[0],bKingPos[1],board, colourMatrix, influence,colourCounter, False)
+            kPotMove = KingPiece.validMove(screen,bKingPos[1],bKingPos[0],board, colourMatrix, influence,colourCounter, False)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
