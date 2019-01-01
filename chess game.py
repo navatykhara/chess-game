@@ -428,7 +428,7 @@ def main():
     currentCol = 0
     colourCounter = "w"
     turnComplete = False    
-    bKingPos = (4,0)
+    bKingPos = (0,4)
     wKingPos = (7,3)
     potMove = (-1,-1)
     kPotMove = 0
@@ -442,8 +442,9 @@ def main():
         influence = checkKingCheck(colourCounter, screen, colourMatrix, board, pawnMatrix)
         if(colourCounter == "b"):
 ##            print(checkKingCheck("b", screen, colourMatrix, board, pawnMatrix), "start")
-##            print(bKingPos[1],bKingPos[0])
-            if(loopCheck((bKingPos[1],bKingPos[0]), colourMatrix, colourCounter,checkKingCheck("b", screen, colourMatrix, board, pawnMatrix))):
+##            print(bKingPos[0],bKingPos[1], 'AAAAAAAAAAAAAAAAAAAAAA')
+##            print(wKingPos[0],wKingPos[1], 'BBBBBBBBBBBBBBBBBBBBBB')
+            if(loopCheck((bKingPos[0],bKingPos[1]), colourMatrix, colourCounter,checkKingCheck("b", screen, colourMatrix, board, pawnMatrix))):
                 binCheck = True
                 print("Black in Check")
             else:
@@ -472,9 +473,10 @@ def main():
                 currentPiece.create(screen,pygame.mouse.get_pos()[0],pygame.mouse.get_pos()[1])
         pygame.display.update()
         if(colourCounter == "w"):
-            kPotMove = KingPiece.validMove(screen,wKingPos[0],wKingPos[1],board, colourMatrix, influence,colourCounter, False)
+            kPotMove = KingPiece.validMove(screen,wKingPos[1],wKingPos[0],board, colourMatrix, influence,colourCounter, False)
         else:
             kPotMove = KingPiece.validMove(screen,bKingPos[1],bKingPos[0],board, colourMatrix, influence,colourCounter, False)
+        print(colourCounter, kPotMove, binCheck, winCheck, len(kPotMove))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -522,7 +524,9 @@ def main():
 
         if(binCheck and len(kPotMove) == 1):
             print("Black Check Mated")
+            break
         elif(winCheck and len(kPotMove) == 1):
             print("White Check Mated")
+            break
 
 main()
