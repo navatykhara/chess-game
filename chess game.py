@@ -391,31 +391,6 @@ def loopCheck(tup, colourMatrix, colour, influence):
             if(influence[i][j] == tup):
                 return True
     return False
-def isCheckMate(screen, pos_x = 0,pos_y = 0, board = [], colourMatrix = [], influence = [], colour = "w", toPrint = True):
-    counter = 0
-    currentCol = colourMatrix[pos_y][pos_x]
-    for i in range(0,3):
-        if((not pos_x-1 + i > 7) and (not pos_y - 1 < 0) and (not pos_x-1 + i < 0)):
-            if((colourMatrix[pos_y-1][pos_x-1 + i] != currentCol)):
-                print((pos_y-1,pos_x -i))
-                if(loopCheck((pos_y-1,pos_x-i), colourMatrix, currentCol, influence)):
-                    counter += 1
-        if((not pos_x-1 + i > 7) and (not pos_y + 1 > 7) and (not pos_x-1 + i < 0)):
-            if((colourMatrix[pos_y+1][pos_x-1 + i] != currentCol)):
-                if(loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence)):
-                    counter += 1
-    if((not pos_x-1 < 0) and (not pos_y < 0) and (not pos_y > 7 )):
-        if((colourMatrix[pos_y][pos_x-1] != currentCol)):
-                if(loopCheck((pos_y, pos_x -1), colourMatrix, currentCol,  influence)):
-                    counter += 1
-    if((not pos_x+1 > 7) and (not pos_y < 0) and (not pos_y > 7)):
-        if((colourMatrix[pos_y][pos_x+1] != currentCol)):
-            if(loopCheck((pos_y, pos_x + 1), colourMatrix,  currentCol, influence)):
-                counter += 1
-    print(counter, currentCol)
-    if(counter == 8):
-        return True
-    return False
 def main():
     pygame.init()
     board = [[RookPiece, KnightPiece, BishopPiece, QueenPiece, KingPiece, BishopPiece, KnightPiece, RookPiece],
@@ -540,13 +515,14 @@ def main():
             break
         if(turnComplete):
             if(colourCounter == "w"):
-                if(isCheckMate(screen, wKingPos[0],wKingPos[1], board , colourMatrix , influence , colourCounter)):
-                    print("Check Mate")
                 colourCounter = "b"
             else:
-                if(isCheckMate(screen, bKingPos[1],bKingPos[0], board , colourMatrix , influence , colourCounter)):
-                    print("Check Mate")
                 colourCounter = "w"
             turnComplete = False
+
+        if(binCheck and len(kPotMove) == 1):
+            print("Black Check Mated")
+        elif(winCheck and len(kPotMove) == 1):
+            print("White Check Mated")
 
 main()
