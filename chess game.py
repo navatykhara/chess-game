@@ -334,26 +334,26 @@ class KingPiece(ChessPiece):
         currentCol = colourMatrix[pos_y][pos_x]
         for i in range(0,3):
             if((not pos_x-1 + i > 7) and (not pos_y - 1 < 0) and (not pos_x-1 + i < 0)):
-                if(colourMatrix[pos_y-1][pos_x-1 + i] != currentCol and not loopCheck((pos_y - 1, pos_x -1 + i), colourMatrix, currentCol, influence) and board[pos_y-1][pos_x-1+i] != currentCol):
+                if((colourMatrix[pos_y-1][pos_x-1 + i] != currentCol and colourMatrix[pos_y-1][pos_x-1 + i] != 0 ) or (not loopCheck((pos_y - 1, pos_x -1 + i), colourMatrix, currentCol, influence) and colourMatrix[pos_y-1][pos_x-1 + i] != currentCol)):
                     if(toPrint):
                         pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x-1 + i) + 50, 87.5* (pos_y-1) + 50,88,88))
 ##                    print((pos_y-1,pos_x-1+i),"0")
                     potMove.append((pos_y-1,pos_x-1+i))
             if((not pos_x-1 + i > 7) and (not pos_y + 1 > 7) and (not pos_x-1 + i < 0)):
 ##                print((pos_y + 1, pos_x -1 + i),loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence), "SS")
-                if(colourMatrix[pos_y+1][pos_x-1 + i] != currentCol and not loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence) and board[pos_y+1][pos_x-1+i] != currentCol):
+                if((colourMatrix[pos_y+1][pos_x-1 + i] != currentCol and colourMatrix[pos_y+1][pos_x-1 + i] != 0 ) or (not loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence) and colourMatrix[pos_y+1][pos_x-1 + i] != currentCol)):
                     if(toPrint):
                         pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x-1 + i) + 50, 87.5* (pos_y+1) + 50,88,88))
 ##                    print((pos_y+1,pos_x-1+i),"1")
                     potMove.append((pos_y+1,pos_x-1+i))
         if((not pos_x-1 < 0) and (not pos_y < 0) and (not pos_y > 7 )):
-            if(colourMatrix[pos_y][pos_x-1] != currentCol and not loopCheck((pos_y, pos_x -1), colourMatrix, currentCol,  influence) and board[pos_y][pos_x-1] != currentCol):
+            if((colourMatrix[pos_y][pos_x-1] != currentCol and colourMatrix[pos_y][pos_x-1] != 0) or (not loopCheck((pos_y, pos_x -1), colourMatrix, currentCol,  influence) and colourMatrix[pos_y][pos_x-1] != currentCol) ):
                 if(toPrint):
                     pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x-1) + 50, 87.5* (pos_y) + 50,88,88))
 ##                print((pos_y,pos_x-1),"2")
                 potMove.append((pos_y,pos_x-1))
         if((not pos_x+1 > 7) and (not pos_y < 0) and (not pos_y > 7)):
-            if(colourMatrix[pos_y][pos_x+1] != currentCol and (not loopCheck((pos_y, pos_x + 1), colourMatrix,  currentCol, influence) and board[pos_y][pos_x+1] != currentCol)):
+            if((colourMatrix[pos_y][pos_x+1] != currentCol and colourMatrix[pos_y][pos_x+1] != 0)or (not loopCheck((pos_y, pos_x + 1), colourMatrix,  currentCol, influence) and colourMatrix[pos_y][pos_x+1] != currentCol)):
                 if(toPrint):
                     pygame.draw.rect(screen,(1,55.5,1.5),(87.5 * (pos_x+1) + 50, 87.5* (pos_y) + 50,88,88))
 ##                print((pos_y,pos_x+1),"3")
@@ -366,7 +366,7 @@ def loadBoard(board,screen, colourMatrix):
         for j in range(len(board[i])):
             if(board[i][j] != 0):
                 if(colourMatrix[i][j] == "b"):
-                    board[i][j].create(screen,87.5*j + 85 ,87.5*i + 88, (200,200,200))
+                     board[i][j].create(screen,87.5*j + 85 ,87.5*i + 88, (200,200,200))
                 else:
                     board[i][j].create(screen,87.5*j + 85 ,87.5*i + 88)
 def loadTile(board,screen):
@@ -390,6 +390,31 @@ def loopCheck(tup, colourMatrix, colour, influence):
 ##            print(influence[i][j], tup)
             if(influence[i][j] == tup):
                 return True
+    return False
+def isCheckMate(screen, pos_x = 0,pos_y = 0, board = [], colourMatrix = [], influence = [], colour = "w", toPrint = True):
+    counter = 0
+    currentCol = colourMatrix[pos_y][pos_x]
+    for i in range(0,3):
+        if((not pos_x-1 + i > 7) and (not pos_y - 1 < 0) and (not pos_x-1 + i < 0)):
+            if((colourMatrix[pos_y-1][pos_x-1 + i] != currentCol)):
+                print((pos_y-1,pos_x -i))
+                if(loopCheck((pos_y-1,pos_x-i), colourMatrix, currentCol, influence)):
+                    counter += 1
+        if((not pos_x-1 + i > 7) and (not pos_y + 1 > 7) and (not pos_x-1 + i < 0)):
+            if((colourMatrix[pos_y+1][pos_x-1 + i] != currentCol)):
+                if(loopCheck((pos_y + 1, pos_x -1 + i), colourMatrix,  currentCol, influence)):
+                    counter += 1
+    if((not pos_x-1 < 0) and (not pos_y < 0) and (not pos_y > 7 )):
+        if((colourMatrix[pos_y][pos_x-1] != currentCol)):
+                if(loopCheck((pos_y, pos_x -1), colourMatrix, currentCol,  influence)):
+                    counter += 1
+    if((not pos_x+1 > 7) and (not pos_y < 0) and (not pos_y > 7)):
+        if((colourMatrix[pos_y][pos_x+1] != currentCol)):
+            if(loopCheck((pos_y, pos_x + 1), colourMatrix,  currentCol, influence)):
+                counter += 1
+    print(counter, currentCol)
+    if(counter == 8):
+        return True
     return False
 def main():
     pygame.init()
@@ -441,8 +466,8 @@ def main():
         pygame.draw.rect(screen,(255,255,255), (50,50,700,700),1)
         influence = checkKingCheck(colourCounter, screen, colourMatrix, board, pawnMatrix)
         if(colourCounter == "b"):
-            print(checkKingCheck("b", screen, colourMatrix, board, pawnMatrix), "start")
-            print(bKingPos[1],bKingPos[0])
+##            print(checkKingCheck("b", screen, colourMatrix, board, pawnMatrix), "start")
+##            print(bKingPos[1],bKingPos[0])
             if(loopCheck((bKingPos[1],bKingPos[0]), colourMatrix, colourCounter,checkKingCheck("b", screen, colourMatrix, board, pawnMatrix))):
                 binCheck = True
                 print("Black in Check")
@@ -515,8 +540,12 @@ def main():
             break
         if(turnComplete):
             if(colourCounter == "w"):
+                if(isCheckMate(screen, wKingPos[0],wKingPos[1], board , colourMatrix , influence , colourCounter)):
+                    print("Check Mate")
                 colourCounter = "b"
             else:
+                if(isCheckMate(screen, bKingPos[1],bKingPos[0], board , colourMatrix , influence , colourCounter)):
+                    print("Check Mate")
                 colourCounter = "w"
             turnComplete = False
 
