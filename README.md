@@ -1,5 +1,6 @@
 # Python Implementation of Chess
-This is a basic Python implementation of chess using Python and the Pygame library. 
+This is a basic Python implementation of chess using Python and the Pygame library.
+
 Current features include:
 
 * Unique chess pieces allowing for varied movement
