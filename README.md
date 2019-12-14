@@ -7,3 +7,7 @@ Markup : * Unique chess pieces allowing for varied movement
          * Friendly fire is disabled to prevent capturing of your own pieces
          * A check system to notify the user of which king is currently in check
          * A check-mate system to notify the user of which king is checkmated.
+Markup : * Bullet list
+              * Nested bullet
+                  * Sub-nested bullet etc
+          * Bullet list item 2
